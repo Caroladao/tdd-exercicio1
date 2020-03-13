@@ -1,4 +1,7 @@
 const Calculator = require( '../lib/Calculator' )
+const { toBeDeepCloseTo } = require( 'jest-matcher-deep-close-to' )
+expect.extend({ toBeDeepCloseTo })
+
 const calculator = new Calculator();
 
 describe( 'Calculator', () => {
@@ -12,14 +15,8 @@ describe( 'Calculator', () => {
     let props = calculator.listProposes( client );
 
     expect( props.length ).toBe(2);
-
-    expect( props[0].total ).toBeCloseTo( 2000.00 );
-    expect( props[0].installments ).toBe( 2 );
-    expect( props[0].installmentsValue ).toBeCloseTo( 1000.00 );
-
-    expect( props[1].total ).toBeCloseTo( 2000.00 );
-    expect( props[1].installments ).toBe( 3 );
-    expect( props[1].installmentsValue ).toBeCloseTo( 666.666 );
+    expect( props[0] ).toBeDeepCloseTo( prepareInstallments( 2000.00, 2, 1000.00 ), 2);
+    expect( props[1] ).toBeDeepCloseTo( prepareInstallments( 2000.00, 3, 666.66 ), 2);
   });
 
   test( 'Customer earns more than 1000 and less 5000', () => {
@@ -32,18 +29,10 @@ describe( 'Calculator', () => {
     let props = calculator.listProposes( client );
 
     expect( props.length ).toBe(3);
+    expect( props[0] ).toBeDeepCloseTo( prepareInstallments( 1300.00, 2, 650.00 ), 2);
+    expect( props[1] ).toBeDeepCloseTo( prepareInstallments( 1500.00, 4, 375.00 ), 2);
+    expect( props[2] ).toBeDeepCloseTo( prepareInstallments( 1500.00, 10, 150.00 ), 2);
 
-    expect( props[0].total ).toBeCloseTo( 1300.00 );
-    expect( props[0].installments ).toBe( 2 );
-    expect( props[0].installmentsValue ).toBeCloseTo( 650.00 );
-
-    expect( props[1].total ).toBeCloseTo( 1500.00 );
-    expect( props[1].installments ).toBe( 4 );
-    expect( props[1].installmentsValue ).toBeCloseTo( 375.00 );
-
-    expect( props[2].total ).toBeCloseTo( 1500.00 );
-    expect( props[2].installments ).toBe( 10 );
-    expect( props[2].installmentsValue ).toBeCloseTo( 150.00 );
   });
 
   test( 'Customer earns more than 5000', () => {
@@ -56,23 +45,14 @@ describe( 'Calculator', () => {
     let props = calculator.listProposes( client );
 
     expect( props.length ).toBe(4);
-
-    expect( props[0].total ).toBeCloseTo( 1100.00 );
-    expect( props[0].installments ).toBe( 2 );
-    expect( props[0].installmentsValue ).toBeCloseTo( 550.00 );
-
-    expect( props[1].total ).toBeCloseTo( 1300.00 );
-    expect( props[1].installments ).toBe( 4 );
-    expect( props[1].installmentsValue ).toBeCloseTo( 325.00 );
-
-    expect( props[2].total ).toBeCloseTo( 1300.00 );
-    expect( props[2].installments ).toBe( 10 );
-    expect( props[2].installmentsValue ).toBeCloseTo( 130.00 );
-
-    expect( props[3].total ).toBeCloseTo( 1400.00 );
-    expect( props[3].installments ).toBe( 20 );
-    expect( props[3].installmentsValue ).toBeCloseTo( 70.00 );
+    expect( props[0] ).toBeDeepCloseTo( prepareInstallments( 1100.00, 2, 550.00 ), 2);
+    expect( props[1] ).toBeDeepCloseTo( prepareInstallments( 1300.00, 4, 325.00 ), 2);
+    expect( props[2] ).toBeDeepCloseTo( prepareInstallments( 1300.00, 10, 130.00 ), 2);
+    expect( props[3] ).toBeDeepCloseTo( prepareInstallments( 1400.00, 20, 70.00 ), 2);
   });
 
-  
 })
+
+function prepareInstallments( total, installments, installmentsValue ){
+  return { total, installments, installmentsValue }
+}

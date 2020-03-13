@@ -46,5 +46,33 @@ describe( 'Calculator', () => {
     expect( props[2].installmentsValue ).toBeCloseTo( 150.00 );
   });
 
+  test( 'Customer earns more than 5000', () => {
+    let client = {
+      nome: 'John Doe',
+      salary: 5500.00,
+      age: 24,
+      value: 1000.00
+    }
+    let props = calculator.listProposes( client );
+
+    expect( props.length ).toBe(4);
+
+    expect( props[0].total ).toBeCloseTo( 1100.00 );
+    expect( props[0].installments ).toBe( 2 );
+    expect( props[0].installmentsValue ).toBeCloseTo( 550.00 );
+
+    expect( props[1].total ).toBeCloseTo( 1300.00 );
+    expect( props[1].installments ).toBe( 4 );
+    expect( props[1].installmentsValue ).toBeCloseTo( 325.00 );
+
+    expect( props[2].total ).toBeCloseTo( 1300.00 );
+    expect( props[2].installments ).toBe( 10 );
+    expect( props[2].installmentsValue ).toBeCloseTo( 130.00 );
+
+    expect( props[3].total ).toBeCloseTo( 1400.00 );
+    expect( props[3].installments ).toBe( 20 );
+    expect( props[3].installmentsValue ).toBeCloseTo( 70.00 );
+  });
+
   
 })
